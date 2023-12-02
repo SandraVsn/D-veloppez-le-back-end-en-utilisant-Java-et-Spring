@@ -31,7 +31,7 @@ The API will be accessible at http://localhost:9000.
 2. Create a .env file with the necessary variables for the successful launch of the database.
 3. Launch the MySQL container with the following command in the project directory:
     ```bash
-    docker-compose up -d
+    docker-compose up --build
     ```
 
    This will start a MySQL container based on the configuration defined in the `docker-compose.yml`.
