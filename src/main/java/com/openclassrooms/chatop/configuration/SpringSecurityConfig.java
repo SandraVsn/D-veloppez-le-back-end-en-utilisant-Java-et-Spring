@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,16 +40,20 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
-				.cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)				
+                .csrf(csrf -> csrf.disable())				
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						// ENABLE SWAGGER -> https://stackoverflow.com/questions/70906081/springboot-swagger3-failed-to-load-remote-configuration
-						.requestMatchers("/api/auth/login", "**", "/api-docs", "/swagger-ui/**", "/v3/api-docs/**", "/ressources/**").permitAll()
+						.requestMatchers("/api/auth/login", "/api/auth/register", "/api-docs", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-				.userDetailsService(customUserDetailsService)
 				.build();
+	}
+	
+	// ENABLE IMAGES -> https://stackoverflow.com/questions/76097411/how-can-i-configure-spring-security-6-to-ignore-the-static-resources-folder
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+	    return web -> web.ignoring().requestMatchers("/images/**");
 	}
 	
 	@Bean
@@ -59,7 +64,7 @@ public class SpringSecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
 		AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-	authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
+		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
 		return authenticationManagerBuilder.build();
 	}
 	
