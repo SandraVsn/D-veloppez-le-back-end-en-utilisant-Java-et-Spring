@@ -1,7 +1,6 @@
 package com.openclassrooms.chatop.model;
 
 import java.time.LocalDateTime;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,15 +15,12 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-    @Column(name = "created_at")
-	private LocalDateTime createdAt;
+	private LocalDateTime created_at;
 	
-    @Column(name = "updated_at")
-	private LocalDateTime updatedAt;
+	private LocalDateTime updated_at;
 
 	private String name;
 
-	@Column
 	private String email;
 	
 	private String password;

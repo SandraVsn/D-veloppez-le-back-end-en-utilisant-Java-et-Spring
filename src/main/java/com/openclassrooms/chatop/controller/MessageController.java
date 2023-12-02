@@ -32,7 +32,7 @@ public class MessageController {
 	}
 	
 	@Operation(summary = "Creates a Message")
-	@PostMapping("/")
+	@PostMapping("")
 	public ApiDefaultResponse createMessage(@RequestBody CreateMessageDto createMessageDto) {
 		Message message = messageService.saveMessage(modelMapper.map(createMessageDto, Message.class));
 		if(message != null) {

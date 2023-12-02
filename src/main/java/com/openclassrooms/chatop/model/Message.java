@@ -17,11 +17,9 @@ public class Message {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-	
-    @Column(name = "updated_at")
-	private LocalDateTime updatedAt;
+    private LocalDateTime created_at;
+
+	private LocalDateTime updated_at;
 	
 	private String message;
 	

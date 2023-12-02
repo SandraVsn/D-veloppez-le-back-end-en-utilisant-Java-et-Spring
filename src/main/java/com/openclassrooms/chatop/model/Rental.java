@@ -2,7 +2,6 @@ package com.openclassrooms.chatop.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,11 +16,9 @@ public class Rental {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 	
-    @Column(name = "updated_at")
-	private LocalDateTime updatedAt;
+	private LocalDateTime updated_at;
 
 	private String name;
 
@@ -33,7 +30,6 @@ public class Rental {
 	
 	private String picture;
 	
-    @Column(name = "owner_id")
-	private int ownerId;
+	private Long owner_id;
 
 }

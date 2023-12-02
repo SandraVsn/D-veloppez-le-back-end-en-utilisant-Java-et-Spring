@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						// ENABLE SWAGGER -> https://stackoverflow.com/questions/70906081/springboot-swagger3-failed-to-load-remote-configuration
-						.requestMatchers("/api/auth/login", "**", "/api-docs", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+						.requestMatchers("/api/auth/login", "**", "/api-docs", "/swagger-ui/**", "/v3/api-docs/**", "/ressources/**").permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 				.userDetailsService(customUserDetailsService)

@@ -26,7 +26,7 @@ public class AuthService {
 	}
 	
 	public User register(User user) {
-		user.setCreatedAt(LocalDateTime.now());
+		user.setCreated_at(LocalDateTime.now());
 		User userInDB = userRepository.findByEmail(user.getEmail());
 		if(userInDB != null) {
 			throw new IllegalArgumentException("User already exists");

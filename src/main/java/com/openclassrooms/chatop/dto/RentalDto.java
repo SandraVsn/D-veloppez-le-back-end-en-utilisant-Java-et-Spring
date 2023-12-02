@@ -9,9 +9,9 @@ public class RentalDto {
 	
 	private Long id;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
-	private LocalDateTime updatedAt;
+	private LocalDateTime updated_at;
 
 	private String name;
 
@@ -23,6 +23,6 @@ public class RentalDto {
 	
 	private String[] picture;
 
-	private int ownerId;
+	private Long owner_id;
 
 }

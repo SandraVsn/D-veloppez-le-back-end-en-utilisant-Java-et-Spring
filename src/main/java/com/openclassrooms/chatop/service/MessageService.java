@@ -22,7 +22,7 @@ public class MessageService {
 	}
 	
 	public Message saveMessage(Message message) {
-		message.setCreatedAt(LocalDateTime.now());
+		message.setCreated_at(LocalDateTime.now());
 		return messageRepository.save(message);
 	}
 

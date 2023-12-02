@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.chatop.dto.ApiDefaultResponse;
 import com.openclassrooms.chatop.dto.CreateRentalDto;
 import com.openclassrooms.chatop.dto.RentalDto;
+import com.openclassrooms.chatop.dto.RentalsDto;
 import com.openclassrooms.chatop.model.Rental;
+import com.openclassrooms.chatop.model.User;
+import com.openclassrooms.chatop.service.AuthService;
 import com.openclassrooms.chatop.service.RentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,29 +38,29 @@ public class RentalController {
 	
 	private RentalService rentalService;
 	private ModelMapper modelMapper;
+	private AuthService authService; 
 	
 	@Autowired
-	public RentalController(RentalService rentalService, ModelMapper modelMapper) {
+	public RentalController(RentalService rentalService, ModelMapper modelMapper, AuthService authService) {
 		this.rentalService = rentalService;
 		this.modelMapper = modelMapper;
+		this.authService = authService;
 	}
 	
 
 	@Operation(summary = "Creates a new Rental")
 	@PostMapping()
-//	https://www.baeldung.com/sprint-boot-multipart-requests
-	public ApiDefaultResponse createRental(@ModelAttribute CreateRentalDto createRentalDto) throws IOException {
-		// TODO : get current user by token 
-		
-		int userId = 1;
-		
-		String imageUrl = "src/main/resources/static/images/" + createRentalDto.getPicture().getOriginalFilename();
-		Files.write(Paths.get(imageUrl), createRentalDto.getPicture().getBytes());
+	//	https://www.baeldung.com/sprint-boot-multipart-requests
+	public ApiDefaultResponse createRental(Principal principal, @ModelAttribute CreateRentalDto createRentalDto) throws IOException {
+		User user = authService.getMe(principal.getName());
+		String imageUrl = "images/" + createRentalDto.getPicture().getOriginalFilename();
+		String pathToWrite = "src/main/resources/static/" + imageUrl;
+		Files.write(Paths.get(pathToWrite), createRentalDto.getPicture().getBytes());
 		
 		Rental rental = modelMapper.map(createRentalDto, Rental.class);
-		rental.setPicture(imageUrl);
-		rental.setOwnerId(userId);
-		rental.setCreatedAt(LocalDateTime.now());
+		rental.setPicture("http://localhost:9000/" + imageUrl);
+		rental.setOwner_id(user.getId());
+		rental.setCreated_at(LocalDateTime.now());
 		
 		Rental savedRental = rentalService.saveRental(rental);
 		if(savedRental != null) {
@@ -81,23 +85,23 @@ public class RentalController {
 
 	@Operation(summary = "Get all Rentals")
 	@GetMapping()
-	public List<RentalDto> getRentals() {
+	public RentalsDto getRentals() {
 	    Iterable<Rental> rentals = rentalService.getRentals();
-
-	    return StreamSupport.stream(rentals.spliterator(), false)
+	    List<RentalDto> rentalDtos = StreamSupport.stream(rentals.spliterator(), false)
 	            .map(rental -> {
 	                RentalDto rentalDto = modelMapper.map(rental, RentalDto.class);
 	                rentalDto.setPicture(new String[]{rental.getPicture()});
 	                return rentalDto;
 	            })
 	            .toList();
+
+	    return new RentalsDto(rentalDtos);
 	}
 	
 
 	@Operation(summary = "Update a Rental by its id")
 	@PutMapping("/{id}")
 	public ApiDefaultResponse updateRental(@PathVariable("id") final Long id, @ModelAttribute CreateRentalDto rentalDto) {
-		//TODO: Check if user who wants to update the rental is the owner !
 		Optional<Rental> r = rentalService.getRental(id);
 		if(r.isPresent()) {
 			Rental currentRental = r.get();
@@ -118,7 +122,7 @@ public class RentalController {
 			if(description != null) {
 				currentRental.setDescription(description);
 			}
-			currentRental.setUpdatedAt(LocalDateTime.now());
+			currentRental.setUpdated_at(LocalDateTime.now());
 			rentalService.saveRental(currentRental);
 			return new ApiDefaultResponse("Rental updated !");
 		} else {

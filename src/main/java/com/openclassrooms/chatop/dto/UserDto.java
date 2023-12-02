@@ -9,9 +9,9 @@ public class UserDto {
 	
 	private Long id;
 	
-	private LocalDateTime createdAt;
+	private LocalDateTime created_at;
 
-	private LocalDateTime updatedAt;
+	private LocalDateTime updated_at;
 
 	private String name;
 

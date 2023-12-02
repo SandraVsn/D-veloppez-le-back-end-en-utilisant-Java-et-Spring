@@ -3,7 +3,6 @@ package com.openclassrooms.chatop.controller;
 import java.security.Principal;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.chatop.dto.CreateUserDto;
 import com.openclassrooms.chatop.dto.LoginDto;
+import com.openclassrooms.chatop.dto.TokenDto;
 import com.openclassrooms.chatop.dto.UserDto;
 import com.openclassrooms.chatop.model.User;
 import com.openclassrooms.chatop.service.AuthService;
@@ -44,12 +44,12 @@ public class AuthController {
 
 	@Operation(summary = "Creates and log in new User, returns the jwt token")
 	@PostMapping("register")
-	public String register(@RequestBody CreateUserDto createUserDto) {
+	public TokenDto register(@RequestBody CreateUserDto createUserDto) {
 		User user = modelMapper.map(createUserDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User createdUser = authService.register(user);
 		if(createdUser != null) {
-			return jwtService.generateToken(createdUser);
+			return new TokenDto(jwtService.generateToken(createdUser));
 		} else {
 			return null;
 		}
@@ -58,20 +58,16 @@ public class AuthController {
 	@Operation(summary = "Log in User and returns the jwt token")
 	@PostMapping("login")
 
-	public String login(Authentication authentication, @RequestBody LoginDto loginDto) {
-	    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-	    modelMapper.typeMap(LoginDto.class, User.class)
-	            .addMappings(mapper -> mapper.map(LoginDto::getLogin, User::setEmail));
-
+	public TokenDto login(Authentication authentication, @RequestBody LoginDto loginDto) {
 	    User user = modelMapper.map(loginDto, User.class);
-		return jwtService.generateToken(user);
+		return new TokenDto(jwtService.generateToken(user));
 	}	
 
 	@Operation(summary = "Get current logged in User")
 	@GetMapping("me")
 	public Object getMe(Principal principal){
-		String email = principal.getName();
-		 return modelMapper.map(authService.getMe(email), UserDto.class); 
+		User user = authService.getMe(principal.getName());
+		return modelMapper.map(user, UserDto.class);
 	}
 	
 }
