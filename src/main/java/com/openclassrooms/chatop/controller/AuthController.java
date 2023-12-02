@@ -42,6 +42,10 @@ public class AuthController {
 	}
 		
 
+	/* Endpoint to create and log in a new User, returning the JWT token
+	 * @param createUserDto : The DTO containing user details for registration.
+	 * @return : A TokenDto containing the JWT token, or null if registration fails.
+	 */
 	@Operation(summary = "Creates and log in new User, returns the jwt token")
 	@PostMapping("register")
 	public TokenDto register(@RequestBody CreateUserDto createUserDto) {
@@ -55,6 +59,11 @@ public class AuthController {
 		}
 	}
 	
+	/* Endpoint to log in a User and return the JWT token
+	 * @param authentication : The Authentication object representing the logged-in user.
+	 * @param loginDto : The DTO containing user credentials for login.
+	 * @return : A TokenDto containing the JWT token.
+	 */
 	@Operation(summary = "Log in User and returns the jwt token")
 	@PostMapping("login")
 
@@ -63,6 +72,10 @@ public class AuthController {
 		return new TokenDto(jwtService.generateToken(user));
 	}	
 
+	/* Endpoint to get details of the current logged-in User
+	 * @param principal : The Principal representing the current logged-in user.
+	 * @return : An object containing details of the current user, or null if not found.
+	 */
 	@Operation(summary = "Get current logged in User")
 	@GetMapping("me")
 	public Object getMe(Principal principal){

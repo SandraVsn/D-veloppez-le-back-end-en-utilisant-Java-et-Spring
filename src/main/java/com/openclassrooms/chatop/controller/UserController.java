@@ -31,6 +31,10 @@ public class UserController {
 	}
 		
 
+	/* Endpoint to get a User by its id
+	 * @param id : The unique identifier of the user.
+	 * @return : A UserDto representing the user details, or null if not found.
+	 */
 	@Operation(summary = "Get a User by its id")
 	@GetMapping("/{id}")
 	public UserDto getUser(@PathVariable("id") final Long id) {

@@ -48,9 +48,14 @@ public class RentalController {
 	}
 	
 
+	/* Endpoint to create a new Rental
+	 * @param principal : The currently authenticated user.
+	 * @param createRentalDto : The DTO containing the rental to create.
+	 * @return : An ApiDefaultResponse indicating the success or failure of the rental creation.
+	 * @throws IOException : Thrown in case of file I/O errors during image processing.
+	 */
 	@Operation(summary = "Creates a new Rental")
 	@PostMapping()
-	//	https://www.baeldung.com/sprint-boot-multipart-requests
 	public ApiDefaultResponse createRental(Principal principal, @ModelAttribute CreateRentalDto createRentalDto) throws IOException {
 		User user = authService.getMe(principal.getName());
 		String imageUrl = "images/" + createRentalDto.getPicture().getOriginalFilename();
@@ -70,6 +75,10 @@ public class RentalController {
 		}
 	}
 
+	/* Endpoint to get a Rental by its id
+	 * @param id : The unique identifier of the rental.
+	 * @return : A RentalDto representing the rental details, or null if not found.
+	 */
 	@Operation(summary = "Get a Rental by its id")
 	@GetMapping("/{id}")
 	public RentalDto getRental(@PathVariable("id") final Long id) {
@@ -83,6 +92,9 @@ public class RentalController {
 		}
 	}
 
+	/* Endpoint to get all Rentals
+	 * @return : A RentalsDto containing a list of RentalDto representing all rentals.
+	 */
 	@Operation(summary = "Get all Rentals")
 	@GetMapping()
 	public RentalsDto getRentals() {
@@ -99,6 +111,11 @@ public class RentalController {
 	}
 	
 
+	/* Endpoint to update a Rental by its id
+	 * @param id : The unique identifier of the rental to be updated.
+	 * @param rentalDto : The DTO containing updated rental information.
+	 * @return : An ApiDefaultResponse indicating the success or failure of the update.
+	 */
 	@Operation(summary = "Update a Rental by its id")
 	@PutMapping("/{id}")
 	public ApiDefaultResponse updateRental(@PathVariable("id") final Long id, @ModelAttribute CreateRentalDto rentalDto) {

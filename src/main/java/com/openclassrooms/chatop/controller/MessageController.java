@@ -31,6 +31,10 @@ public class MessageController {
 		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 	}
 	
+	/* Endpoint to create a new Message
+	 * @param createMessageDto : The DTO containing the details of the message to be created.
+	 * @return : An ApiDefaultResponse indicating the success or failure of the message creation.
+	 */
 	@Operation(summary = "Creates a Message")
 	@PostMapping("")
 	public ApiDefaultResponse createMessage(@RequestBody CreateMessageDto createMessageDto) {
