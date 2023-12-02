@@ -8,12 +8,12 @@ Chatop is a real estate rental company in a tourist area that offers an online p
 
 1. Clone the repository to your local machine:
     ```bash
-    git clone https://github.com/SandraVsn/Developpez-le-back-end-en-utilisant-Java-et-Spring.git
+    git clone https://github.com/SandraVsn/chatop.git
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd project_name
+    cd chatop
     ```
 
 3. Compile and run the API with Maven:
